@@ -256,7 +256,7 @@ export function RegistrySidebar() {
 			</SidebarHeader>
 			<SidebarContent>
 				<SidebarGroup>
-					<SidebarGroupLabel className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+					<SidebarGroupLabel className="text-2xs font-medium uppercase tracking-[0.06em] text-muted-foreground">
 						Registry
 					</SidebarGroupLabel>
 					<SidebarGroupContent>
@@ -277,7 +277,7 @@ export function RegistrySidebar() {
 
 				{visibleReviewNav.length > 0 && (
 					<SidebarGroup>
-						<SidebarGroupLabel className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+						<SidebarGroupLabel className="text-2xs font-medium uppercase tracking-[0.06em] text-muted-foreground">
 							Review
 						</SidebarGroupLabel>
 						<SidebarGroupContent>
@@ -299,7 +299,7 @@ export function RegistrySidebar() {
 
 				{visibleUserNav.length > 0 && (
 					<SidebarGroup>
-						<SidebarGroupLabel className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+						<SidebarGroupLabel className="text-2xs font-medium uppercase tracking-[0.06em] text-muted-foreground">
 							My Work
 						</SidebarGroupLabel>
 						<SidebarGroupContent>
@@ -330,7 +330,7 @@ export function RegistrySidebar() {
 
 				{visibleAdminNav.length > 0 && (
 					<SidebarGroup>
-						<SidebarGroupLabel className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+						<SidebarGroupLabel className="text-2xs font-medium uppercase tracking-[0.06em] text-muted-foreground">
 							Admin
 						</SidebarGroupLabel>
 						<SidebarGroupContent>

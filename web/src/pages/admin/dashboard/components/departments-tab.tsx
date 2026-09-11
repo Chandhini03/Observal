@@ -104,7 +104,7 @@ export function DepartmentsTab() {
                         className="h-full rounded-full"
                         style={{
                           width: `${dept.utilization_pct}%`,
-                          background: dept.utilization_pct > 80 ? "hsl(var(--success, 142 76% 36%))" : dept.utilization_pct > 50 ? "hsl(var(--primary))" : "hsl(var(--warning, 38 92% 50%))",
+                          background: dept.utilization_pct > 80 ? "oklch(var(--success))" : dept.utilization_pct > 50 ? "oklch(var(--primary))" : "oklch(var(--warning))",
                         }}
                       />
                     </div>
@@ -153,13 +153,13 @@ export function DepartmentsTab() {
                   <td className="p-3">
                     <div className="flex items-center gap-1">
                       {t.trend_pct > 0 ? (
-                        <TrendingUp className="h-3 w-3 text-green-600" />
+                        <TrendingUp className="h-3 w-3 text-success" />
                       ) : t.trend_pct < 0 ? (
-                        <TrendingDown className="h-3 w-3 text-red-600" />
+                        <TrendingDown className="h-3 w-3 text-destructive" />
                       ) : (
                         <Minus className="h-3 w-3 text-muted-foreground" />
                       )}
-                      <span className={`text-xs tabular-nums ${t.trend_pct > 0 ? "text-green-600" : t.trend_pct < 0 ? "text-red-600" : "text-muted-foreground"}`}>
+                      <span className={`text-xs tabular-nums ${t.trend_pct > 0 ? "text-success" : t.trend_pct < 0 ? "text-destructive" : "text-muted-foreground"}`}>
                         {t.trend_pct > 0 ? "+" : ""}{t.trend_pct}%
                       </span>
                     </div>

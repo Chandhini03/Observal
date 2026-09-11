@@ -11,7 +11,9 @@ import {
 import { useExecPlatforms, useExecStrategicInsights } from "@/hooks/use-api";
 import type { ExecPlatformScore } from "@/lib/types";
 
-const COLORS = ["#2563eb", "#7c3aed", "#0d9488", "#f59e0b", "#e11d48", "#6366f1", "#84cc16"];
+import { AXIS_TICK, CHART_SERIES, CURSOR_FILL, GRID_STROKE, TOOLTIP_STYLE, token } from "@/lib/chart-theme";
+
+const COLORS = CHART_SERIES;
 
 function deriveRadarData(p: ExecPlatformScore, best: { latency: number; cost: number }) {
   const speedScore = best.latency > 0 ? Math.max(0, 100 - ((p.avg_latency_ms / best.latency) - 1) * 50) : 100;
@@ -79,10 +81,10 @@ export function InvestmentsTab() {
         <p className="text-xs text-muted-foreground mb-4">Sorted by usage volume. Click a bar to view platform details.</p>
         <ResponsiveContainer width="100%" height={280}>
           <BarChart data={chartData} margin={{ top: 10, right: 10, bottom: 0, left: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} vertical={false} />
-            <XAxis dataKey="name" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(0)}K` : v} axisLine={false} tickLine={false} />
-            <Tooltip formatter={(value) => [Number(value).toLocaleString(), "Sessions"]} contentStyle={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} cursor={{ fill: "hsl(var(--muted))", opacity: 0.3 }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="oklch(var(--border))" strokeOpacity={0.5} vertical={false} />
+            <XAxis dataKey="name" tick={{ fill: "oklch(var(--muted-foreground))", fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fill: "oklch(var(--muted-foreground))", fontSize: 11 }} tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(0)}K` : v} axisLine={false} tickLine={false} />
+            <Tooltip formatter={(value) => [Number(value).toLocaleString(), "Sessions"]} contentStyle={{ background: "oklch(var(--background))", border: "1px solid oklch(var(--border))", borderRadius: 8, fontSize: 12 }} cursor={{ fill: "oklch(var(--muted))", opacity: 0.3 }} />
             <Bar dataKey="sessions" radius={[6, 6, 0, 0]} barSize={48} onClick={(_, index) => setSelected(index)} className="cursor-pointer" activeBar={false}>
               {chartData.map((entry, i) => (
                 <Cell key={i} fill={i === selected ? entry.color : `${entry.color}66`} />
@@ -113,7 +115,7 @@ export function InvestmentsTab() {
               <div className="text-xs text-muted-foreground">Sessions</div>
             </div>
             <div className="text-center">
-              <div className="text-lg font-bold text-green-600">${platform.avg_cost.toFixed(3)}</div>
+              <div className="text-lg font-bold text-success">${platform.avg_cost.toFixed(3)}</div>
               <div className="text-xs text-muted-foreground">Avg Cost/Task</div>
             </div>
             <div className="text-center">
@@ -143,8 +145,8 @@ export function InvestmentsTab() {
           <h3 className="text-sm font-medium mb-2">Performance Radar</h3>
           <ResponsiveContainer width="100%" height={300}>
             <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="80%">
-              <PolarGrid stroke="hsl(var(--border))" strokeOpacity={0.5} />
-              <PolarAngleAxis dataKey="metric" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+              <PolarGrid stroke="oklch(var(--border))" strokeOpacity={0.5} />
+              <PolarAngleAxis dataKey="metric" tick={{ fill: "oklch(var(--muted-foreground))", fontSize: 11 }} />
               <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
               <Radar
                 dataKey="value"
@@ -252,8 +254,8 @@ function ModelComparison() {
           <div>
             <ResponsiveContainer width="100%" height={260}>
               <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="80%">
-                <PolarGrid stroke="hsl(var(--border))" strokeOpacity={0.5} />
-                <PolarAngleAxis dataKey="metric" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+                <PolarGrid stroke="oklch(var(--border))" strokeOpacity={0.5} />
+                <PolarAngleAxis dataKey="metric" tick={{ fill: "oklch(var(--muted-foreground))", fontSize: 11 }} />
                 <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
                 <Radar
                   dataKey="value"

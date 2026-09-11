@@ -121,13 +121,13 @@ function ROIProjections() {
       <div className="flex items-center justify-between mb-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <TrendingUp className="h-4 w-4 text-emerald-500" />
+            <TrendingUp className="h-4 w-4 text-success" />
             <h3 className="text-sm font-semibold">ROI Projections</h3>
           </div>
           <p className="text-xs text-muted-foreground">Quarterly savings forecast based on current growth trajectory</p>
         </div>
         <div className="text-right">
-          <p className="text-2xl font-bold text-emerald-500">{roi.roi_multiple}x</p>
+          <p className="text-2xl font-bold text-success">{roi.roi_multiple}x</p>
           <p className="text-[11px] text-muted-foreground">ROI multiple</p>
         </div>
       </div>
@@ -147,7 +147,7 @@ function ROIProjections() {
           <p className="text-[11px] text-muted-foreground">Total Invested</p>
         </div>
         <div className="rounded-md bg-muted/20 p-3 text-center">
-          <p className="text-lg font-bold text-emerald-500">{roi.growth_rate_pct}%</p>
+          <p className="text-lg font-bold text-success">{roi.growth_rate_pct}%</p>
           <p className="text-[11px] text-muted-foreground">Growth Rate</p>
         </div>
         <div className="rounded-md bg-muted/20 p-3 text-center">
@@ -165,18 +165,18 @@ function ROIProjections() {
       {/* Quarterly Projections Chart */}
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={roi.projections} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} vertical={false} />
-          <XAxis dataKey="quarter" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`} axisLine={false} tickLine={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="oklch(var(--border))" strokeOpacity={0.5} vertical={false} />
+          <XAxis dataKey="quarter" tick={{ fill: "oklch(var(--muted-foreground))", fontSize: 11 }} axisLine={false} tickLine={false} />
+          <YAxis tick={{ fill: "oklch(var(--muted-foreground))", fontSize: 11 }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`} axisLine={false} tickLine={false} />
           <Tooltip
             formatter={(value, name) => [
               `$${(Number(value) / 1000).toFixed(1)}K`,
               name === "projected_savings" ? "Quarterly Savings" : "Cumulative",
             ]}
-            contentStyle={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
-            cursor={{ fill: "hsl(var(--muted))", opacity: 0.3 }}
+            contentStyle={{ background: "oklch(var(--background))", border: "1px solid oklch(var(--border))", borderRadius: 8, fontSize: 12 }}
+            cursor={{ fill: "oklch(var(--muted))", opacity: 0.3 }}
           />
-          <Bar dataKey="projected_savings" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} activeBar={false} />
+          <Bar dataKey="projected_savings" fill="oklch(var(--primary))" radius={[4, 4, 0, 0]} activeBar={false} />
         </BarChart>
       </ResponsiveContainer>
 
@@ -190,7 +190,7 @@ function ROIProjections() {
             }`}
           >
             <p className="text-[11px] text-muted-foreground mb-1">{p.quarter}</p>
-            <p className="text-sm font-bold text-emerald-500">
+            <p className="text-sm font-bold text-success">
               ${(p.projected_savings / 1000).toFixed(1)}K
             </p>
             <p className="text-[10px] text-muted-foreground">
@@ -263,19 +263,19 @@ export function CostTab() {
             <AreaChart data={cost.monthly_trend} margin={{ top: 10, right: 10, bottom: 0, left: 10 }}>
               <defs>
                 <linearGradient id="savingsGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#16a34a" stopOpacity={0.25} />
-                  <stop offset="100%" stopColor="#16a34a" stopOpacity={0.02} />
+                  <stop offset="0%" stopColor="oklch(var(--success))" stopOpacity={0.25} />
+                  <stop offset="100%" stopColor="oklch(var(--success))" stopOpacity={0.02} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} vertical={false} />
-              <XAxis dataKey="month" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} tickFormatter={(v) => `$${(v / 1000).toFixed(1)}K`} axisLine={false} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="oklch(var(--border))" strokeOpacity={0.5} vertical={false} />
+              <XAxis dataKey="month" tick={{ fill: "oklch(var(--muted-foreground))", fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: "oklch(var(--muted-foreground))", fontSize: 11 }} tickFormatter={(v) => `$${(v / 1000).toFixed(1)}K`} axisLine={false} tickLine={false} />
               <Tooltip
                 formatter={(value, name) => [`$${Number(value).toFixed(2)}`, name === "savings" ? "Savings" : "AI Spend"]}
-                contentStyle={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
+                contentStyle={{ background: "oklch(var(--background))", border: "1px solid oklch(var(--border))", borderRadius: 8, fontSize: 12 }}
               />
-              <Area type="natural" dataKey="savings" stroke="#16a34a" strokeWidth={2.5} fill="url(#savingsGrad)" dot={false} activeDot={{ r: 4, strokeWidth: 2, fill: "hsl(var(--background))", stroke: "#16a34a" }} />
-              <Line type="natural" dataKey="ai_spend" stroke="#e11d48" strokeWidth={2} strokeDasharray="4 4" dot={false} />
+              <Area type="natural" dataKey="savings" stroke="oklch(var(--success))" strokeWidth={2.5} fill="url(#savingsGrad)" dot={false} activeDot={{ r: 4, strokeWidth: 2, fill: "oklch(var(--background))", stroke: "oklch(var(--success))" }} />
+              <Line type="natural" dataKey="ai_spend" stroke="oklch(var(--destructive))" strokeWidth={2} strokeDasharray="4 4" dot={false} />
             </AreaChart>
           </ResponsiveContainer>
         ) : (
@@ -285,11 +285,11 @@ export function CostTab() {
         )}
         <div className="flex gap-4 mt-3 text-xs text-muted-foreground">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-0.5 bg-green-600 rounded" />
+            <div className="w-3 h-0.5 bg-success rounded" />
             <span>Savings</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-0.5 bg-red-600 rounded" />
+            <div className="w-3 h-0.5 bg-destructive rounded" />
             <span>AI Spend</span>
           </div>
         </div>
@@ -314,13 +314,13 @@ export function CostTab() {
                   </div>
                   <div className="flex items-center gap-2">
                     <div
-                      className="h-1.5 bg-green-600 rounded-full"
+                      className="h-1.5 bg-success rounded-full"
                       style={{ width: `${Math.min((cat.actual_cost / maxCost) * 100, 100)}%` }}
                     />
-                    <span className="text-xs text-green-600 font-semibold">${cat.actual_cost.toFixed(2)}</span>
+                    <span className="text-xs text-success font-semibold">${cat.actual_cost.toFixed(2)}</span>
                   </div>
                 </div>
-                <span className="text-xs font-semibold text-green-600 bg-green-50 dark:bg-green-950 px-2 py-0.5 rounded">
+                <span className="text-xs font-semibold text-success bg-success/10 px-2 py-0.5 rounded">
                   {cat.saved_pct}%
                 </span>
               </div>
@@ -332,7 +332,7 @@ export function CostTab() {
               <span>Before (manual)</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-1.5 bg-green-600 rounded" />
+              <div className="w-3 h-1.5 bg-success rounded" />
               <span>After (AI agents)</span>
             </div>
           </div>

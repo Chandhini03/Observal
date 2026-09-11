@@ -22,7 +22,7 @@ function Sparkline({ data }: { data: number[] }) {
       <polyline
         points={points}
         fill="none"
-        stroke="hsl(var(--primary))"
+        stroke="oklch(var(--primary))"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -161,17 +161,17 @@ function VelocityChart({ weekly }: { weekly: { week: string; traces: number }[] 
             <AreaChart data={chartData} margin={{ top: 10, right: 10, bottom: 0, left: 5 }}>
               <defs>
                 <linearGradient id="velGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.02} />
+                  <stop offset="0%" stopColor="oklch(var(--primary))" stopOpacity={0.3} />
+                  <stop offset="100%" stopColor="oklch(var(--primary))" stopOpacity={0.02} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} vertical={false} />
-              <XAxis dataKey="week" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip formatter={(value, name) => [Number(value).toLocaleString(), name === "baseline" ? "Baseline (first 4 weeks)" : "Traces"]} contentStyle={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
-              <Area type="natural" dataKey="traces" stroke="hsl(var(--primary))" strokeWidth={2.5} fill="url(#velGrad)" dot={false} activeDot={{ r: 4, strokeWidth: 2, fill: "hsl(var(--background))" }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="oklch(var(--border))" strokeOpacity={0.5} vertical={false} />
+              <XAxis dataKey="week" tick={{ fill: "oklch(var(--muted-foreground))", fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: "oklch(var(--muted-foreground))", fontSize: 11 }} axisLine={false} tickLine={false} />
+              <Tooltip formatter={(value, name) => [Number(value).toLocaleString(), name === "baseline" ? "Baseline (first 4 weeks)" : "Traces"]} contentStyle={{ background: "oklch(var(--background))", border: "1px solid oklch(var(--border))", borderRadius: 8, fontSize: 12 }} />
+              <Area type="natural" dataKey="traces" stroke="oklch(var(--primary))" strokeWidth={2.5} fill="url(#velGrad)" dot={false} activeDot={{ r: 4, strokeWidth: 2, fill: "oklch(var(--background))" }} />
               {showBaseline && (
-                <Line type="monotone" dataKey="baseline" stroke="hsl(var(--muted-foreground))" strokeWidth={1.5} strokeDasharray="6 3" dot={false} />
+                <Line type="monotone" dataKey="baseline" stroke="oklch(var(--muted-foreground))" strokeWidth={1.5} strokeDasharray="6 3" dot={false} />
               )}
             </AreaChart>
           </ResponsiveContainer>
@@ -238,7 +238,7 @@ function TimeToValue() {
               <td className="p-3 tabular-nums text-xs text-muted-foreground">{agent.created_at}</td>
               <td className="p-3 tabular-nums">
                 {agent.days_to_100 !== null ? (
-                  <span className={agent.days_to_100 <= 7 ? "text-green-600 font-semibold" : agent.days_to_100 <= 30 ? "text-foreground" : "text-orange-500"}>
+                  <span className={agent.days_to_100 <= 7 ? "text-success font-semibold" : agent.days_to_100 <= 30 ? "text-foreground" : "text-warning"}>
                     {agent.days_to_100}d
                   </span>
                 ) : (

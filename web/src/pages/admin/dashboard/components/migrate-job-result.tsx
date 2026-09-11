@@ -37,7 +37,7 @@ export function MigrateJobResult({ job, onReset }: MigrateJobResultProps) {
 					<p className="text-sm font-medium text-red-700 dark:text-red-400">
 						Job Failed
 					</p>
-					<p className="mt-1 text-xs text-red-600 dark:text-red-300">
+					<p className="mt-1 text-xs text-destructive">
 						{job.error_message || "An unknown error occurred"}
 					</p>
 				</div>
@@ -200,8 +200,8 @@ function ValidateResultView({ result }: { result: MigrationValidateResult }) {
 				<span
 					className={
 						result.checksums_valid
-							? "text-green-600 dark:text-green-400"
-							: "text-red-600 dark:text-red-400"
+							? "text-success"
+							: "text-destructive"
 					}
 				>
 					{result.checksums_valid ? "All valid" : "Some invalid"}

@@ -1058,7 +1058,7 @@ export default function AgentDetailPage({ agentId }: { agentId?: string } = {}) 
                                   key={i}
                                   className={`h-3.5 w-3.5 ${
                                     i < fb.rating
-                                      ? "fill-current text-amber-500"
+                                      ? "fill-current text-warning"
                                       : "text-muted-foreground/30"
                                   }`}
                                 />

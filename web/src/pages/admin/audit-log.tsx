@@ -301,7 +301,7 @@ return (
           />
         ) : (
           <>
-            <div className="rounded-md border overflow-x-auto">
+            <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
               <Table>
                 <TableHeader>
                   <TableRow>

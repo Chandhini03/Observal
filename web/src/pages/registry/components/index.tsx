@@ -62,6 +62,7 @@ import {
 import { ErrorState } from "@/components/shared/error-state";
 import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/registry/status-badge";
+import { EntityGlyph } from "@/components/registry/entity-glyph";
 import { ComponentCard } from "@/components/registry/component-card";
 import { RegistryName } from "@/components/registry/registry-name";
 import { registryItemPath } from "@/lib/registry-name";
@@ -133,18 +134,23 @@ function makeColumns(activeType: RegistryType): ColumnDef<RegistryItem>[] {
         </button>
       ),
       cell: ({ row }) => (
-        <div className="min-w-[160px]">
-          <Link
-            to={registryItemPath(row.original, activeType, row.original.id)}
-            className="block min-w-0 hover:underline underline-offset-4"
-          >
-            <RegistryName item={row.original} nameClassName="font-medium text-sm" />
-          </Link>
-          {row.original.description && (
-            <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1 max-w-xs">
-              {row.original.description}
-            </p>
-          )}
+        <div className="flex min-w-[160px] items-start gap-2.5">
+          {/* Glyph makes the component type scannable down the column without
+              needing a separate type column on narrow viewports. */}
+          <EntityGlyph type={activeType} size="sm" className="mt-0.5" />
+          <div className="min-w-0">
+            <Link
+              to={registryItemPath(row.original, activeType, row.original.id)}
+              className="block min-w-0 hover:underline underline-offset-4"
+            >
+              <RegistryName item={row.original} nameClassName="font-medium text-sm" />
+            </Link>
+            {row.original.description && (
+              <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1 max-w-xs">
+                {row.original.description}
+              </p>
+            )}
+          </div>
         </div>
       ),
     },
@@ -499,7 +505,7 @@ export default function ComponentsPage() {
             actionHref="/"
           />
         ) : view === "table" ? (
-          <div className="overflow-x-auto animate-in">
+          <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm animate-in">
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (

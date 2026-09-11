@@ -658,7 +658,7 @@ function AgentListContent() {
 
         {/* My Drafts */}
         {drafts.length > 0 && (
-          <div className="rounded-lg border border-border bg-card">
+          <div className="rounded-xl border border-border bg-card shadow-sm">
             <button
               type="button"
               className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium hover:bg-accent/40 transition-colors rounded-t-lg"
@@ -742,7 +742,7 @@ function AgentListContent() {
 
         {/* Archived */}
         {archivedAgents.length > 0 && (
-          <div className="rounded-lg border border-border bg-card">
+          <div className="rounded-xl border border-border bg-card shadow-sm">
             <button
               type="button"
               className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium hover:bg-accent/40 transition-colors rounded-t-lg"
@@ -799,7 +799,7 @@ function AgentListContent() {
 
         {/* Deleted */}
         {deletedAgents.length > 0 && (
-          <div className="rounded-lg border border-border bg-card">
+          <div className="rounded-xl border border-border bg-card shadow-sm">
             <button
               type="button"
               className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium hover:bg-accent/40 transition-colors rounded-t-lg"
@@ -885,7 +885,7 @@ function AgentListContent() {
             actionHref="/"
           />
         ) : view === "table" ? (
-          <div className="overflow-x-auto animate-in">
+          <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm animate-in">
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (

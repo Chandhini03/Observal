@@ -11,31 +11,15 @@ import { ErrorBoundary } from "@/components/shared/error-boundary";
 import { VersionMismatchBanner } from "@/components/shared/version-mismatch-banner";
 import "@/app.css";
 
-const THEMES = [
-  "light",
-  "dark",
-  "midnight",
-  "forest",
-  "sunset",
-  "solarized-dark",
-  "solarized-light",
-  "dracula",
-  "nord",
-  "monokai",
-  "gruvbox",
-  "catppuccin",
-  "tokyo-night",
-  "one-dark",
-  "rose-pine",
-];
-
 function RootComponent() {
   const [queryClient] = useState(makeQueryClient);
 
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider defaultTheme="system" themes={THEMES}>
+        {/* Appearance defaults to the monochrome preset in system mode; the
+            preset and legacy theme lists live in @/lib/theme. */}
+        <ThemeProvider defaultTheme="system">
           <Outlet />
           <VersionMismatchBanner />
         </ThemeProvider>

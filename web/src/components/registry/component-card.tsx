@@ -7,6 +7,8 @@ import { GitBranch } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { RegistryName } from "@/components/registry/registry-name";
 import { canonicalRouteParts } from "@/lib/registry-name";
+import { tagColorClasses } from "@/lib/tag-colors";
+import { EntityGlyph } from "@/components/registry/entity-glyph";
 import type { RegistryType } from "@/lib/api";
 
 interface ComponentCardProps {
@@ -45,9 +47,9 @@ export function ComponentCard({
   className,
 }: ComponentCardProps) {
   const cardClassName = [
-    "group block border border-border bg-card p-4 rounded-md",
+    "group block border border-border bg-card p-4 rounded-xl shadow-sm",
     "transition-all duration-200 ease-out",
-    "hover:-translate-y-0.5 hover:border-foreground/20 hover:bg-accent/40",
+    "hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/20",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     className ?? "",
   ].join(" ");
@@ -59,13 +61,20 @@ export function ComponentCard({
   const body = (
     <>
       <div className="flex items-start justify-between gap-2">
-        <RegistryName
-          item={{ name, namespace, slug, qualified_name }}
-          nameClassName="font-display text-sm font-semibold leading-tight"
-        />
-        <Badge variant="outline" className="shrink-0 text-[10px] px-1.5 py-0">
+        <div className="flex min-w-0 items-start gap-2.5">
+          {/* The glyph names the type symbolically; the chip below repeats it as
+              text so the meaning never rests on colour or icon alone. */}
+          <EntityGlyph type={type} labelled={false} />
+          <RegistryName
+            item={{ name, namespace, slug, qualified_name }}
+            nameClassName="font-display text-sm font-semibold leading-tight"
+          />
+        </div>
+        <span
+          className={`shrink-0 rounded-full px-2 py-0.5 text-2xs font-medium ${tagColorClasses(type)}`}
+        >
           {TYPE_LABELS[type] ?? type}
-        </Badge>
+        </span>
       </div>
 
       {description && (

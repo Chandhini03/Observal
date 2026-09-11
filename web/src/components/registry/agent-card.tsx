@@ -9,6 +9,7 @@ import { ArrowDownToLine, Puzzle, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { HarnessBadges } from "@/components/registry/harness-badges";
 import { RegistryName } from "@/components/registry/registry-name";
+import { EntityGlyph } from "@/components/registry/entity-glyph";
 import { canonicalRouteParts } from "@/lib/registry-name";
 import { compactNumber } from "@/lib/utils";
 
@@ -50,9 +51,9 @@ export function AgentCard({
   className,
 }: AgentCardProps) {
   const cardClassName = [
-    "group flex h-full min-h-60 flex-col rounded-md border border-border bg-card p-4",
+    "group flex h-full min-h-60 flex-col rounded-xl border border-border bg-card p-4 shadow-sm",
     "transition-all duration-200 ease-out",
-    "hover:-translate-y-0.5 hover:border-foreground/20 hover:bg-accent/40",
+    "hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/20",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     className ?? "",
   ].join(" ");
@@ -64,10 +65,14 @@ export function AgentCard({
   const body = (
     <>
       <div className="flex items-start justify-between gap-3">
-        <RegistryName
-          item={{ name, namespace, slug, qualified_name }}
-          nameClassName="font-display text-sm font-semibold leading-tight"
-        />
+        <div className="flex min-w-0 items-start gap-2.5">
+          {/* Agents are visually distinguished from components by their glyph. */}
+          <EntityGlyph type="agent" />
+          <RegistryName
+            item={{ name, namespace, slug, qualified_name }}
+            nameClassName="font-display text-sm font-semibold leading-tight"
+          />
+        </div>
         {version && (
           <Badge variant="secondary" className="shrink-0 text-[10px] px-1.5 py-0">
             {version}

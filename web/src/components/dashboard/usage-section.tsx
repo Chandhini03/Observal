@@ -23,23 +23,15 @@ import {
 import { BarChart3, Coins } from "lucide-react";
 import { useTokenStats } from "@/hooks/use-api";
 import { StatCard } from "@/components/dashboard/stat-card";
+import { AXIS_TICK, GRID_STROKE, TOOLTIP_STYLE, token } from "@/lib/chart-theme";
 import type { TokenStats, TokenUsageRow } from "@/lib/types";
 
 const CHART_HEIGHT = 220;
 
 /** Recharts needs concrete colors, so resolve the semantic tokens used elsewhere. */
-const COLOR_INPUT = "oklch(var(--success))";
-const COLOR_OUTPUT = "oklch(var(--info))";
-const COLOR_CREDITS = "oklch(var(--warning))";
-
-const AXIS_TICK = { fill: "oklch(var(--muted-foreground))", fontSize: 11 };
-
-const TOOLTIP_STYLE = {
-	background: "oklch(var(--background))",
-	border: "1px solid oklch(var(--border))",
-	borderRadius: 8,
-	fontSize: 12,
-} as const;
+const COLOR_INPUT = token("success");
+const COLOR_OUTPUT = token("info");
+const COLOR_CREDITS = token("warning");
 
 export function fmtCompact(n: number): string {
 	if (!Number.isFinite(n)) return "0";
@@ -153,7 +145,7 @@ function CreditsOverTime({ data }: { data: TokenStats["over_time"] }) {
 						<stop offset="100%" stopColor={COLOR_CREDITS} stopOpacity={0.02} />
 					</linearGradient>
 				</defs>
-				<CartesianGrid strokeDasharray="3 3" stroke="oklch(var(--border))" strokeOpacity={0.5} vertical={false} />
+				<CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} strokeOpacity={0.5} vertical={false} />
 				<XAxis dataKey="label" tick={AXIS_TICK} axisLine={false} tickLine={false} />
 				<YAxis tick={AXIS_TICK} axisLine={false} tickLine={false} width={48} />
 				<Tooltip
@@ -197,7 +189,7 @@ function TokensOverTime({ data }: { data: TokenStats["over_time"] }) {
 							<stop offset="100%" stopColor={COLOR_OUTPUT} stopOpacity={0.02} />
 						</linearGradient>
 					</defs>
-					<CartesianGrid strokeDasharray="3 3" stroke="oklch(var(--border))" strokeOpacity={0.5} vertical={false} />
+					<CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} strokeOpacity={0.5} vertical={false} />
 					<XAxis dataKey="label" tick={AXIS_TICK} axisLine={false} tickLine={false} />
 					<YAxis tick={AXIS_TICK} axisLine={false} tickLine={false} width={48} tickFormatter={fmtCompact} />
 					<Tooltip

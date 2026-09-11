@@ -53,7 +53,7 @@ export function PageHeader({
     <div className="sticky top-0 z-30 w-full border-b bg-background">
       {/* Top row: sidebar trigger + breadcrumbs */}
       <div className="border-b">
-        <div className="flex min-h-10 items-center gap-3 px-3 py-1.5">
+        <div className="flex min-h-10 items-center gap-3 px-5 py-1.5">
           <SidebarTrigger />
           {breadcrumbs && breadcrumbs.length > 0 && (
             <Breadcrumb>
@@ -81,10 +81,12 @@ export function PageHeader({
 
       {/* Bottom row: title + actions */}
       <div className="bg-header">
-        <div className="flex min-h-10 w-full flex-wrap items-center justify-between gap-1 px-3 py-1 md:flex-nowrap">
+        <div className="flex min-h-12 w-full flex-wrap items-center justify-between gap-1 px-5 py-1.5 md:flex-nowrap">
           <div className="flex items-center gap-2">
             {actionButtonsLeft}
-            <h2 className="text-lg font-semibold leading-7">{title}</h2>
+            {/* Page title: medium weight with tight tracking, per the mockup's
+                h1 treatment (weight and tracking carry hierarchy, not size). */}
+            <h2 className="text-lg font-medium leading-7 tracking-[-0.02em]">{title}</h2>
           </div>
           <div className="ml-auto flex items-center gap-1">
             {actionButtonsRight}
@@ -94,16 +96,16 @@ export function PageHeader({
 
         {/* Tabs */}
         {tabs && (
-          <div className="ml-2">
+          <div className="ml-4">
             <div className="inline-flex h-8 items-center">
               {tabs.map((tab) => (
                 <Link
                   key={tab.value}
                   to={tab.href}
                   className={cn(
-                    "inline-flex h-full items-center border-b-2 border-transparent px-2 py-0.5 text-sm font-medium whitespace-nowrap transition-colors hover:bg-muted/50",
+                    "inline-flex h-full items-center border-b-2 border-transparent px-2.5 py-0.5 text-xs font-medium whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground",
                     (activeTab === tab.value || pathname === tab.href) &&
-                      "border-primary-accent",
+                      "border-primary-accent text-foreground",
                   )}
                 >
                   {tab.label}

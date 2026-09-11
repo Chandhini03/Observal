@@ -496,7 +496,7 @@ export default function RegistryHome() {
             </form>
           </div>
 
-          <div className="rounded-md border border-border bg-card">
+          <div className="rounded-xl border border-border bg-card shadow-sm">
             <div className="grid gap-6 px-4 py-4 md:grid-cols-3 xl:grid-cols-6">
               <BriefMetric
                 label="Sessions today"
@@ -537,7 +537,7 @@ export default function RegistryHome() {
         <RecommendedForYou />
 
         <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]">
-          <div className="rounded-md border border-border bg-card">
+          <div className="rounded-xl border border-border bg-card shadow-sm">
             <SectionHeader
               title="Coding activity today"
               description="Input, output, tools, and recent sessions from your harnesses."
@@ -603,7 +603,7 @@ export default function RegistryHome() {
             </div>
           </div>
 
-          <aside className="rounded-md border border-border bg-card">
+          <aside className="rounded-xl border border-border bg-card shadow-sm">
             <SectionHeader title="Registry impact" description="Rank, owned agents, and immediate follow-ups." />
             <div className="space-y-4 p-4">
               <RankSummary rank={bestRank} isLoading={leaderboardLoading} />
