@@ -553,7 +553,7 @@ function AgentListContent() {
         ]}
       />
 
-      <div className="page-body w-full space-y-5">
+      <div className="page-body w-full mx-auto space-y-5">
         <PageIntro
           eyebrow="Registry"
           title="Agents"

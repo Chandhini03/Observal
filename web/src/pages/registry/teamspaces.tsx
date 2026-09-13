@@ -344,8 +344,8 @@ export default function TeamspacesPage() {
 	return (
 		<>
 			<PageHeader title="Teamspaces" breadcrumbs={[{ label: "Registry", href: "/" }, { label: "Teamspaces" }]} />
-			<main className="min-h-0 flex-1 overflow-y-auto">
-				<div className="page-body w-full">
+			<main className="min-h-0 flex-1 overflow-y-auto bg-surface-sunken/30">
+				<div className="page-body mx-auto w-full max-w-6xl">
 					<PageIntro
 						eyebrow="Organization"
 						title="Teamspaces"
