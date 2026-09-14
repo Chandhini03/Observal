@@ -20,31 +20,10 @@ import {
   LeaderFeatureCard,
   RankingHead,
   RankingRow,
-  MovementItem,
-  Sparkline,
 } from "@/components/registry/registry-primitives";
 import { useLeaderboard, useComponentLeaderboard } from "@/hooks/use-api";
 import { compactNumber } from "@/lib/utils";
 import type { LeaderboardWindow } from "@/lib/types";
-
-/* ────────────────────────────────────────────────── */
-/*  Fallback data — used only when API returns empty */
-/* ────────────────────────────────────────────────── */
-
-const FALLBACK_RANKINGS = [
-  { pos: 1, name: "Repository Analyst", handle: "github/repository-analyst", downloads: "18.2k", rating: "4.9", change: "+38%" },
-  { pos: 2, name: "Secure Reviewer", handle: "acme/secure-reviewer", downloads: "12.8k", rating: "4.9", change: "+31%" },
-  { pos: 3, name: "Test Architect", handle: "dx/test-architect", downloads: "11.6k", rating: "4.8", change: "+26%" },
-  { pos: 4, name: "Incident Responder", handle: "infra/incident-responder", downloads: "9.4k", rating: "4.7", change: "+21%" },
-  { pos: 5, name: "Release Pilot", handle: "platform/release-pilot", downloads: "8.4k", rating: "4.8", change: "+18%" },
-  { pos: 6, name: "Docs Maintainer", handle: "open-source/docs-maintainer", downloads: "7.9k", rating: "4.7", change: "+12%" },
-];
-
-const FALLBACK_MOVEMENTS = [
-  { badge: "+4", title: "test-architect", description: "Shared by Developer Experience after 28 successful sessions." },
-  { badge: "+2", title: "incident-responder", description: "New Sentry integration drove 1.8k additional pulls." },
-  { badge: "NEW", title: "schema-guide", description: "First approved release from the Data Platform teamspace." },
-];
 
 /* ────────────────────────────────────────────────── */
 /*  Top tab / sub-tab / window types                 */
@@ -63,7 +42,7 @@ export default function LeaderboardPage() {
 
   const isLoading = topTab === "agents" ? agentsLoading : componentsLoading;
 
-  /* Build ranked list from API data or fallback */
+  /* Build ranked list from API data */
   const rankings = useMemo(() => {
     if (topTab === "agents") {
       if (!leaderboard || leaderboard.length === 0) return null;
@@ -95,11 +74,8 @@ export default function LeaderboardPage() {
       }));
   }, [topTab, leaderboard, componentLeaderboard]);
 
-  /* Feature card: use first ranked item or fallback */
+  /* Feature card: use first ranked item */
   const featuredItem = rankings?.[0] ?? null;
-
-  /* Determine if using fallback */
-  const useFallback = !isLoading && !rankings;
 
   return (
     <>
@@ -158,31 +134,26 @@ export default function LeaderboardPage() {
             <section className="mb-3.5">
               <LeaderFeatureCard
                 rank="Most adopted this week"
-                title={featuredItem?.name ?? "repository-analyst"}
-                handle={featuredItem?.handle ?? "github/repository-analyst · v3.4.0"}
+                title={featuredItem?.name ?? "—"}
+                handle={featuredItem?.handle ?? "—"}
                 description={
-                  useFallback
-                    ? "Maps unfamiliar repositories and produces evidence-backed change plans. Adoption accelerated after the monorepo navigation update."
-                    : ((featuredItem?.item as unknown as Record<string, unknown>)?.description as string) ??
-                      "Maps unfamiliar repositories and produces evidence-backed change plans."
+                  ((featuredItem?.item as unknown as Record<string, unknown>)?.description as string) ??
+                    "No description available."
                 }
                 stats={[
-                  { label: "Downloads", value: featuredItem?.downloads ?? "18.2k" },
+                  { label: "Downloads", value: featuredItem?.downloads ?? "—" },
                   {
                     label: "7-day growth",
                     value: (
                       <span className="text-success">
-                        {featuredItem?.change ?? "+38%"}
+                        {featuredItem?.change ?? "—"}
                       </span>
                     ),
                   },
-                  { label: "Rating", value: featuredItem?.rating ?? "4.9" },
-                  { label: "Compatible harnesses", value: "8" },
+                  { label: "Rating", value: featuredItem?.rating ?? "—" },
+                  { label: "Compatible harnesses", value: "—" },
                 ]}
-                className="relative"
-              >
-                <Sparkline className="absolute right-5 top-6 h-[68px] w-[180px]" />
-              </LeaderFeatureCard>
+              />
             </section>
 
             {/* ── Lower grid: rankings + movement ────────── */}
@@ -206,23 +177,8 @@ export default function LeaderboardPage() {
                   </button>
                 </div>
                 <RankingHead />
-                {useFallback
-                  ? FALLBACK_RANKINGS.map((r) => (
-                      <RankingRow
-                        key={r.pos}
-                        position={r.pos}
-                        downloads={r.downloads}
-                        rating={r.rating}
-                        change={r.change}
-                        isTop={r.pos <= 3}
-                      >
-                        <strong className="block text-xs font-medium">{r.name}</strong>
-                        <span className="block mt-0.5 font-mono text-[10px] text-muted-foreground">
-                          {r.handle}
-                        </span>
-                      </RankingRow>
-                    ))
-                  : rankings!.map((r) => (
+                {rankings && rankings.length > 0
+                  ? rankings.map((r) => (
                       <RankingRow
                         key={r.id}
                         position={r.pos}
@@ -236,7 +192,12 @@ export default function LeaderboardPage() {
                           {r.handle}
                         </span>
                       </RankingRow>
-                    ))}
+                    ))
+                  : (
+                    <div className="px-5 py-8 text-center text-xs text-muted-foreground">
+                      No ranking data available for this period.
+                    </div>
+                  )}
               </section>
 
               {/* Movement card */}
@@ -245,14 +206,9 @@ export default function LeaderboardPage() {
                 <p className="mb-3.5 text-[10px] text-muted-foreground">
                   Context behind the ranking changes.
                 </p>
-                {FALLBACK_MOVEMENTS.map((m) => (
-                  <MovementItem
-                    key={m.title}
-                    badge={m.badge}
-                    title={m.title}
-                    description={m.description}
-                  />
-                ))}
+                <div className="py-4 text-center text-xs text-muted-foreground">
+                  No movement data available yet.
+                </div>
               </aside>
             </div>
           </>

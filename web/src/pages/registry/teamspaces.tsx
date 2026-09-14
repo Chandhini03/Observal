@@ -14,8 +14,8 @@ import { useAllTeams, useClaimPersonalTeamspace, useCreateTeam } from "@/hooks/u
 import { hasMinRole } from "@/hooks/use-role-guard";
 import { getUserRole } from "@/lib/api";
 import { slugifyRegistryText } from "@/lib/registry-name";
-import { cn } from "@/lib/utils";
 import { EntityGlyph } from "@/components/registry/entity-glyph";
+import { StatusBadge } from "@/components/registry/status-badge";
 import {
   TypeTabs,
   ViewToggle,
@@ -27,7 +27,7 @@ import {
 import type { Team } from "@/lib/types";
 
 /* ────────────────────────────────────────────────────────── */
-/*  Extended team type with mockup-specific display fields    */
+/*  Extended team type with display-specific fields            */
 /* ────────────────────────────────────────────────────────── */
 
 interface TeamDisplay extends Team {
@@ -35,49 +35,7 @@ interface TeamDisplay extends Team {
   component_count?: number;
   review_count?: number;
   display_role?: string;
-  /** Extended visibility for mockup fallback data (API only returns public/private). */
-  display_visibility?: "public" | "private" | "internal";
 }
-
-/** Fallback data matching the HTML mockup exactly – used only when the API
- *  returns zero teams so the page is never empty during development. */
-const FALLBACK_TEAMS: TeamDisplay[] = [
-  {
-    id: "fb-1", name: "Platform Engineering", handle: "platform",
-    description: "Agents and components used to operate Acme's internal developer platform.",
-    visibility: "private", role: "owner", member_count: 14,
-    agent_count: 38, component_count: 64, review_count: 3, display_role: "Owner",
-    display_visibility: "private",
-  },
-  {
-    id: "fb-2", name: "Developer Experience", handle: "dx",
-    description: "Shared developer tooling, onboarding workflows, and quality automation.",
-    visibility: "private", role: "member", member_count: 9,
-    agent_count: 22, component_count: 31, review_count: 1, display_role: "Member",
-    display_visibility: "internal",
-  },
-  {
-    id: "fb-3", name: "Security Engineering", handle: "security",
-    description: "Secure development guidance, review agents, and policy components.",
-    visibility: "private", role: null, member_count: 7,
-    agent_count: 16, component_count: 28, review_count: 0, display_role: "Viewer",
-    display_visibility: "internal",
-  },
-  {
-    id: "fb-4", name: "Data Platform", handle: "data",
-    description: "Warehouse operations, schema migrations, and analytics engineering.",
-    visibility: "private", role: null, member_count: 11,
-    agent_count: 19, component_count: 31, review_count: 2, display_role: "Invite pending",
-    display_visibility: "private",
-  },
-  {
-    id: "fb-5", name: "Open Source", handle: "open-source",
-    description: "Community-maintained agents and reusable components.",
-    visibility: "public", role: null, member_count: 23,
-    agent_count: 41, component_count: 72, review_count: 0, display_role: "Discoverable",
-    display_visibility: "public",
-  },
-];
 
 /** Convert an API Team into a TeamDisplay with defaults. */
 function toDisplay(team: Team): TeamDisplay {
@@ -99,36 +57,9 @@ function slugifyHandle(value: string) {
   return base && base.length < 3 ? `${base}-team` : base;
 }
 
-/** Resolve the effective visibility for display.
- *  Prefer display_visibility (mockup-specific), fall back to API visibility. */
+/** Resolve the effective visibility for display. */
 function effectiveVisibility(team: TeamDisplay): string {
-  return team.display_visibility ?? team.visibility ?? "private";
-}
-
-/** Map visibility to badge color tone matching the HTML mockup exactly:
- *  Private → warning (yellow/amber)
- *  Internal → success (green)
- *  Public → accent (primary blue)
- */
-function visibilityTone(vis: string): { bg: string; text: string; label: string } {
-  switch (vis) {
-    case "private":
-      return { bg: "bg-light-yellow", text: "text-dark-yellow", label: "Private" };
-    case "public":
-      return { bg: "bg-primary-accent/15", text: "text-primary-accent", label: "Public" };
-    default: // "internal" or any other
-      return { bg: "bg-light-green", text: "text-dark-green", label: "Internal" };
-  }
-}
-
-/** Visibility badge matching mockup colours exactly. */
-function VisibilityBadge({ visibility, className }: { visibility: string; className?: string }) {
-  const t = visibilityTone(visibility);
-  return (
-    <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-2xs font-medium", t.bg, t.text, className)}>
-      {t.label}
-    </span>
-  );
+  return team.visibility ?? "private";
 }
 
 /** Role display text. */
@@ -148,7 +79,7 @@ function TeamspaceCard({ team, isAdmin }: { team: TeamDisplay; isAdmin: boolean 
       {/* Head: icon + visibility badge */}
       <div className="flex items-start justify-between gap-2.5">
         <EntityGlyph type="teamspace" size="lg" labelled />
-        <VisibilityBadge visibility={effectiveVisibility(team)} />
+        <StatusBadge status={effectiveVisibility(team)} />
       </div>
 
       {/* Name */}
@@ -207,7 +138,7 @@ function TeamspaceListRow({ team, isAdmin }: { team: TeamDisplay; isAdmin: boole
       </div>
 
       {/* Visibility */}
-      <VisibilityBadge visibility={effectiveVisibility(team)} />
+      <StatusBadge status={effectiveVisibility(team)} />
 
       {/* Role */}
       <span className="text-[10px] text-muted-foreground">{roleLabel(team, isAdmin)}</span>
@@ -455,12 +386,10 @@ export default function TeamspacesPage() {
   const [view, setView] = useState<ViewMode>("grid");
   const [tab, setTab] = useState<TeamTab>("all");
 
-  /* Use fallback data when the API returns nothing (dev / empty instance). */
   const teams: TeamDisplay[] = useMemo(
-    () => (apiTeams.length > 0 ? apiTeams.map(toDisplay) : FALLBACK_TEAMS),
+    () => apiTeams.map(toDisplay),
     [apiTeams],
   );
-  const usingFallback = apiTeams.length === 0 && !isLoading;
 
   const query = teamQuery.trim().toLowerCase();
   const filteredTeams = useMemo(() =>
@@ -492,7 +421,7 @@ export default function TeamspacesPage() {
     { value: "discoverable", label: "Discoverable", count: discoverable.length || undefined },
   ], [filteredTeams.length, myTeams.length, invitations.length, discoverable.length]);
 
-  const firstTeamspace = !isLoading && apiTeams.length === 0 && !usingFallback;
+  const firstTeamspace = !isLoading && apiTeams.length === 0;
   const personalClaimed = apiTeams.some((t) => t.is_personal && t.role === "owner");
 
   /* For a first-time setup (no teams at all), show the panel inline instead of as a modal. */
@@ -595,20 +524,6 @@ export default function TeamspacesPage() {
             {visibleTeams.map((team) => (
               <TeamspaceCard key={team.id} team={team} isAdmin={isAdmin} />
             ))}
-            {/* Create card (dashed) */}
-            <TeamspaceCardShell dashed className="cursor-pointer" href={undefined}>
-              <button
-                type="button"
-                className="grid h-full w-full place-items-center text-center text-muted-foreground"
-                onClick={() => setShowCreate(true)}
-              >
-                <span>
-                  <span className="block text-[22px]">＋</span>
-                  <strong className="mt-2 block text-xs font-medium">Create a teamspace</strong>
-                  <small className="mt-1 block text-[10px]">Choose a namespace and visibility.</small>
-                </span>
-              </button>
-            </TeamspaceCardShell>
           </div>
         ) : (
           /* ── List view ── */
