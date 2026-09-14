@@ -35,6 +35,8 @@ import {
 } from "@/hooks/use-api";
 import { useOptionalAuth } from "@/hooks/use-auth";
 import { useDeploymentConfig } from "@/hooks/use-deployment-config";
+import { hasMinRole } from "@/hooks/use-role-guard";
+import { getUserRole } from "@/lib/api";
 import { registryItemPath } from "@/lib/registry-name";
 import { compactNumber } from "@/lib/utils";
 import type { RegistryItem, Session, TopAgentItem } from "@/lib/types";
@@ -129,6 +131,7 @@ export default function RegistryHome() {
   const recentSessions = (sessions ?? []).slice(0, 4);
   const displayName =
     whoami?.name || whoami?.username || whoami?.email || "Welcome back";
+  const canReview = hasMinRole(getUserRole(), "reviewer");
   const daySummary = isAuthenticated
     ? myAgentsLoading || sessionsLoading
       ? "Loading your registry activity."
@@ -152,7 +155,7 @@ export default function RegistryHome() {
 
       <div className="page-body w-full">
         <PageIntro
-          eyebrow="Your workspace"
+          eyebrow="Registry"
           title="Registry"
           subtitle="Find trusted agents and keep track of the registry work connected to you."
         />
@@ -208,15 +211,14 @@ export default function RegistryHome() {
             What are you working on?
           </h2>
           <p className="mt-2 max-w-[600px] text-sm text-muted-foreground">
-            Find an approved agent, inspect a trace, or assemble a workflow from
-            trusted components.
+            Find an approved agent or assemble a workflow from trusted components.
           </p>
 
           <IntentSearch
             value={search}
             onChange={setSearch}
             onSubmit={handleSearch}
-            placeholder='Try "review a Python service" or paste a trace ID'
+            placeholder='Try "review a Python service" or "database migration"'
             kbdHint="⌘ K"
             className="mt-[22px] max-w-[780px]"
           />
@@ -230,9 +232,7 @@ export default function RegistryHome() {
             {isAuthenticated && (
               <IntentChip href="/traces">Inspect a trace</IntentChip>
             )}
-            {isAuthenticated && (
-              <IntentChip href="/review">Review submissions</IntentChip>
-            )}
+            {canReview && <IntentChip href="/review">Review submissions</IntentChip>}
           </nav>
         </section>
 
