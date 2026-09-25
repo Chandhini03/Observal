@@ -49,6 +49,7 @@ import { TableSkeleton, CardSkeleton } from "@/components/shared/skeleton-layout
 import { ErrorState } from "@/components/shared/error-state";
 import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/registry/status-badge";
+import { RecommendedBadge } from "@/components/registry/recommended-badge";
 import { AgentCard } from "@/components/registry/agent-card";
 import { RegistryName } from "@/components/registry/registry-name";
 import { registryItemPath } from "@/lib/registry-name";
@@ -370,7 +371,8 @@ const columns: ColumnDef<RegistryItem>[] = [
       const status = row.original.status as string | undefined;
       const reason = row.original.rejection_reason as string | undefined;
       return status ? (
-        <div>
+        <div className="flex items-center gap-1.5">
+          {row.original.is_recommended && <RecommendedBadge />}
           <StatusBadge status={status} />
           {status === "rejected" && reason && (
             <p className="text-xs text-destructive mt-0.5 line-clamp-2 max-w-[300px]" title={reason}>
@@ -948,6 +950,7 @@ function AgentListContent() {
                 component_count={agent.component_count as number | undefined}
                 supported_harnesses={agent.supported_harnesses as string[] | undefined}
                 inferred_supported_harnesses={agent.inferred_supported_harnesses as string[] | undefined}
+                is_recommended={!!agent.is_recommended}
                 className={`animate-in stagger-${Math.min(i + 1, 5)}`}
               />
             ))}

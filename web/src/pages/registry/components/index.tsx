@@ -62,6 +62,7 @@ import {
 import { ErrorState } from "@/components/shared/error-state";
 import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/registry/status-badge";
+import { RecommendedBadge } from "@/components/registry/recommended-badge";
 import { ComponentCard } from "@/components/registry/component-card";
 import { RegistryName } from "@/components/registry/registry-name";
 import { registryItemPath } from "@/lib/registry-name";
@@ -162,7 +163,10 @@ function makeColumns(activeType: RegistryType): ColumnDef<RegistryItem>[] {
       header: "Status",
       cell: ({ row }) =>
         row.original.status ? (
-          <StatusBadge status={row.original.status} />
+          <div className="flex items-center gap-1.5">
+            {row.original.is_recommended && <RecommendedBadge />}
+            <StatusBadge status={row.original.status} />
+          </div>
         ) : (
           <span className="text-muted-foreground">-</span>
         ),
@@ -558,6 +562,7 @@ export default function ComponentsPage() {
                 version={item.version as string | undefined}
                 status={item.status}
                 git_url={item.git_url as string | undefined}
+                is_recommended={!!item.is_recommended}
                 className={`animate-in stagger-${Math.min(i + 1, 5)}`}
               />
             ))}

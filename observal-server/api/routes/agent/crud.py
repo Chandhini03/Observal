@@ -367,6 +367,7 @@ async def list_agents(
             created_by_username=username_map.get(a.created_by),
             created_at=a.created_at,
             updated_at=a.updated_at,
+            is_recommended=a.is_recommended,
         )
         for a in agents
     ]
@@ -423,6 +424,7 @@ async def my_agents(
             created_by_username=current_user.username,
             created_at=a.created_at,
             updated_at=a.updated_at,
+            is_recommended=a.is_recommended,
         )
         for a in agents
     ]
@@ -488,6 +490,7 @@ async def archived_agents(
             created_by_username=username_map.get(a.created_by),
             created_at=a.created_at,
             updated_at=a.updated_at,
+            is_recommended=a.is_recommended,
         )
         for a in agents
     ]
@@ -553,6 +556,7 @@ async def deleted_agents(
             created_at=a.created_at,
             deleted_at=a.deleted_at,
             updated_at=a.updated_at,
+            is_recommended=a.is_recommended,
         )
         for a in agents
     ]
