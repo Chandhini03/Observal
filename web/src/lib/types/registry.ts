@@ -462,6 +462,20 @@ export interface RecommendationsResponse {
 	topics: string[];
 }
 
+// ── Admin Recommended ────────────────────────────────────────────────
+
+export interface SetRecommendedRequest {
+	entity_type: string;
+	entity_id: string;
+	recommended: boolean;
+}
+
+export interface SetRecommendedResponse {
+	entity_type: string;
+	entity_id: string;
+	is_recommended: boolean;
+}
+
 // ── Discovery (ARD) ─────────────────────────────────────────────────
 
 /** `external` is a remote agent registered by its A2A Agent Card (ADR 0002). */
