@@ -3,16 +3,16 @@
 
 """Add is_recommended flag to agents and component listings.
 
-Revision ID: 028_recommended_flag
-Revises: 027_discovery_entries
+Revision ID: 029_recommended_flag
+Revises: 028_agent_component_pins
 """
 
 import sqlalchemy as sa
 
 from alembic import op
 
-revision = "028_recommended_flag"
-down_revision = "027_discovery_entries"
+revision = "029_recommended_flag"
+down_revision = "028_agent_component_pins"
 branch_labels = None
 depends_on = None
 
