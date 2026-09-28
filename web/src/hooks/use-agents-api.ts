@@ -262,9 +262,9 @@ export function useSetRecommended() {
     mutationFn: (vars: { entity_type: string; entity_id: string; recommended: boolean }) =>
       admin.setRecommended(vars),
     onSuccess: (_data, vars) => {
-      // Invalidate list and detail queries so the badge updates everywhere
-      qc.invalidateQueries({ queryKey: ["registry"] });
+      // Keep the toggle pending until the active detail query reflects the new value.
       toast.success(vars.recommended ? "Marked as recommended" : "Recommendation removed");
+      return qc.invalidateQueries({ queryKey: ["registry"] });
     },
     onError: (err: Error) => {
       toast.error(err.message || "Failed to update recommendation");
