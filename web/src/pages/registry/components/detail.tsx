@@ -375,6 +375,16 @@ export default function ComponentDetailPage({
               )}
             </div>
 
+            {isAdmin && (
+              <div className="lg:hidden">
+                <ComponentRecommendedToggle
+                  entityType={singularType}
+                  entityId={id}
+                  isRecommended={!!item.is_recommended}
+                />
+              </div>
+            )}
+
             {/* Grid: Main + Sidebar */}
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start">
             {/* Tabs */}

@@ -993,6 +993,16 @@ export default function AgentDetailPage({ agentId }: { agentId?: string } = {}) 
                 />
               </div>
 
+              {isAdmin && (
+                <div className="lg:hidden">
+                  <RecommendedToggle
+                    entityType="agent"
+                    entityId={id}
+                    isRecommended={!!a.is_recommended}
+                  />
+                </div>
+              )}
+
               {/* Tabs */}
               <Tabs defaultValue="overview">
                 <TabsList>
