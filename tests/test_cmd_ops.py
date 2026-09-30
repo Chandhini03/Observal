@@ -1676,8 +1676,28 @@ def test_every_admin_workflow_has_output_contract():
                 yield name, child
 
     rows = list(leaves(command))
-    assert len(rows) == 24
+    assert len(rows) == 25
     assert all(any(parameter.name == "output" for parameter in leaf.params) for _name, leaf in rows)
+
+
+def test_admin_recommend_resolves_the_reference_and_sends_the_flag(cli, monkeypatch):
+    sent = []
+    monkeypatch.setattr(ops.client, "resolve_registry_reference", lambda kind, ref: f"{kind}-uuid")
+    monkeypatch.setattr(
+        ops.client,
+        "patch",
+        lambda path, body: sent.append((path, body)) or {**body, "is_recommended": body["recommended"]},
+    )
+
+    ops.admin_recommend("MCP", "acme/github", False, "json")
+    ops.admin_recommend("agent", "acme/reviewer", True, "table")
+
+    assert sent == [
+        ("/api/v1/admin/recommended", {"entity_type": "mcp", "entity_id": "mcp-uuid", "recommended": True}),
+        ("/api/v1/admin/recommended", {"entity_type": "agent", "entity_id": "agent-uuid", "recommended": False}),
+    ]
+    assert cli.json[0]["is_recommended"] is True
+    assert "acme/reviewer is no longer recommended" in cli.lines[-1]
 
 
 def test_admin_mutations_return_json_without_human_output(cli, monkeypatch):

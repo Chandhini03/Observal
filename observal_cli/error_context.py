@@ -62,6 +62,7 @@ OPERATION_LABELS = {
     "admin_scim_tokens": "List SCIM tokens",
     "admin_security_events": "List security events",
     "admin_set": "Update server setting",
+    "admin_recommend": "Update recommendation",
     "admin_set_role": "Update user role",
     "admin_settings": "List server settings",
     "admin_trace_privacy": "Read trace privacy setting",

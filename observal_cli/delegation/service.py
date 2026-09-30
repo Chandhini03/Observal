@@ -146,6 +146,7 @@ def find_agents(text: str, *, limit: int = 5) -> list[dict]:
             "version": r.get("version"),
             "harnesses": r.get("obs:supportedHarnesses") or [],
             "ref": r.get("obs:nativeRef"),
+            "recommended": bool(r.get("obs:recommended")),
         }
         for r in results[:limit]
     ]
