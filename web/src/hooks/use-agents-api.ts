@@ -23,7 +23,7 @@ import {
   bulk,
   admin,
 } from "@/lib/api";
-import type { LeaderboardWindow } from "@/lib/types";
+import type { LeaderboardWindow, SetRecommendedRequest } from "@/lib/types";
 
 // ── Agent-specific ──────────────────────────────────────────────────
 
@@ -259,7 +259,7 @@ export function useBulkCreateAgents() {
 export function useSetRecommended() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (vars: { entity_type: string; entity_id: string; recommended: boolean }) =>
+    mutationFn: (vars: SetRecommendedRequest) =>
       admin.setRecommended(vars),
     onSuccess: (_data, vars) => {
       // Keep the toggle pending until the active detail query reflects the new value.

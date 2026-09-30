@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2026 Chandhini <chandhini@example.com>
+# SPDX-FileCopyrightText: 2026 Chandhini Veerabuthiran <Chandhini03@users.noreply.github.com>
 # SPDX-License-Identifier: Apache-2.0
 
 """Admin endpoint to toggle the recommended flag on agents and component listings."""
@@ -8,7 +8,7 @@ from __future__ import annotations
 import uuid  # noqa: TC003 - Pydantic needs uuid.UUID at runtime for validation
 from typing import Literal
 
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Request
 from loguru import logger as optic
 from pydantic import BaseModel
 from sqlalchemy import select
@@ -22,6 +22,7 @@ from models.prompt import PromptListing
 from models.sandbox import SandboxListing
 from models.skill import SkillListing
 from models.user import User, UserRole
+from services.audit.helpers import audit_detail
 
 from ._router import router
 
@@ -52,6 +53,7 @@ class SetRecommendedResponse(BaseModel):
 @router.patch("/recommended", response_model=SetRecommendedResponse)
 async def set_recommended(
     req: SetRecommendedRequest,
+    request: Request,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(require_role(UserRole.admin)),
 ):
@@ -67,6 +69,14 @@ async def set_recommended(
         raise HTTPException(status_code=404, detail=f"{req.entity_type} not found")
 
     entity.is_recommended = req.recommended
+    audit_detail(
+        request,
+        action="registry.recommended.update",
+        resource_type=req.entity_type,
+        resource_id=str(entity.id),
+        resource_name=entity.qualified_name,
+        detail=f"recommended={req.recommended}",
+    )
     await db.commit()
     await db.refresh(entity)
 

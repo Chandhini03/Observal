@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2026 Chandhini <chandhini@example.com>
+# SPDX-FileCopyrightText: 2026 Chandhini Veerabuthiran <Chandhini03@users.noreply.github.com>
 # SPDX-License-Identifier: Apache-2.0
 
 """Add is_recommended flag to agents and component listings.

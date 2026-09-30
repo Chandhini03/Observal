@@ -7,8 +7,8 @@
 
 
 import { Link, useNavigate, useParams, useSearch } from "@tanstack/react-router";
-import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
-import { Star, ArrowLeft, History, Loader2, ArrowDownToLine, Archive, ArchiveRestore, AlertTriangle, Award } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Star, ArrowLeft, History, Loader2, ArrowDownToLine, Archive, ArchiveRestore, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import {
   useRegistryItem,
@@ -23,13 +23,12 @@ import {
   useTeams,
   useUpdateRegistryVisibility,
   useWhoami,
-  useSetRecommended,
 } from "@/hooks/use-api";
 import { getUserRole } from "@/lib/api";
 import { useOptionalAuth } from "@/hooks/use-auth";
 import { hasMinRole } from "@/hooks/use-role-guard";
 import type { RegistryType } from "@/lib/api";
-import type { FeedbackItem, RegistryItem, ComponentVersionSummary } from "@/lib/types";
+import type { FeedbackItem, RegistryItem, ComponentVersionSummary, RecommendableType } from "@/lib/types";
 import { compactNumber } from "@/lib/utils";
 import { canonicalRouteParts, registryIdentity } from "@/lib/registry-name";
 import { tagColorClasses } from "@/lib/tag-colors";
@@ -52,7 +51,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
-import { RecommendedBadge } from "@/components/registry/recommended-badge";
+import { RecommendedBadge, RecommendedToggle } from "@/components/registry/recommended-badge";
 import { Button } from "@/components/ui/button";
 import { PickerSelect } from "@/components/ui/picker-select";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -377,8 +376,8 @@ export default function ComponentDetailPage({
 
             {isAdmin && (
               <div className="lg:hidden">
-                <ComponentRecommendedToggle
-                  entityType={singularType}
+                <RecommendedToggle
+                  entityType={singularType as RecommendableType}
                   entityId={id}
                   isRecommended={!!item.is_recommended}
                 />
@@ -616,8 +615,8 @@ export default function ComponentDetailPage({
               )}
 
               {isAdmin && (
-                <ComponentRecommendedToggle
-                  entityType={singularType}
+                <RecommendedToggle
+                  entityType={singularType as RecommendableType}
                   entityId={id}
                   isRecommended={!!item.is_recommended}
                 />
@@ -682,45 +681,6 @@ export default function ComponentDetailPage({
         </AlertDialogContent>
       </AlertDialog>
     </>
-  );
-}
-
-function ComponentRecommendedToggle({
-  entityType,
-  entityId,
-  isRecommended,
-}: {
-  entityType: string;
-  entityId: string;
-  isRecommended: boolean;
-}) {
-  const mutation = useSetRecommended();
-  const next = !isRecommended;
-  return (
-    <div className="border border-border rounded-md p-4 space-y-2">
-      <h3 className="text-xs font-semibold font-display uppercase tracking-wider text-muted-foreground">
-        Admin curation
-      </h3>
-      <Button
-        variant="outline"
-        size="sm"
-        className={isRecommended
-          ? "h-8 gap-1.5 border-primary-accent/40 bg-primary-accent/10 text-primary-accent hover:bg-primary-accent/20"
-          : "h-8 gap-1.5"
-        }
-        disabled={mutation.isPending}
-        onClick={() =>
-          mutation.mutate({ entity_type: entityType, entity_id: entityId, recommended: next })
-        }
-      >
-        <Award className="h-3.5 w-3.5" />
-        {mutation.isPending
-          ? "Saving..."
-          : isRecommended
-            ? "Remove recommendation"
-            : "Mark as recommended"}
-      </Button>
-    </div>
   );
 }
 

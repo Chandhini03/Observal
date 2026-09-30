@@ -14,6 +14,7 @@ from schemas.constants import (
     VALID_HOOK_EXECUTION_MODES,
     VALID_HOOK_HANDLER_TYPES,
     VALID_HOOK_SCOPES,
+    RecommendedFlag,
     Visibility,
     make_harness_list_validator,
     make_option_validator,
@@ -132,12 +133,7 @@ class HookListingResponse(BaseModel):
     updated_at: datetime
     download_count: int = 0
     user_permission: str | None = None
-    is_recommended: bool = False
-
-    @field_validator("is_recommended", mode="before")
-    @classmethod
-    def _coerce_recommended(cls, v: object) -> bool:
-        return bool(v) if v is not None else False
+    is_recommended: RecommendedFlag = False
 
     @field_validator("user_permission", mode="before")
     @classmethod
@@ -164,12 +160,7 @@ class HookListingSummary(BaseModel):
     status: ListingStatus
     rejection_reason: str | None = None
     updated_at: datetime | None = None
-    is_recommended: bool = False
-
-    @field_validator("is_recommended", mode="before")
-    @classmethod
-    def _coerce_recommended(cls, v: object) -> bool:
-        return bool(v) if v is not None else False
+    is_recommended: RecommendedFlag = False
 
     model_config = {"from_attributes": True}
 

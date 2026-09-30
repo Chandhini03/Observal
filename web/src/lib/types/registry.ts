@@ -464,14 +464,16 @@ export interface RecommendationsResponse {
 
 // ── Admin Recommended ────────────────────────────────────────────────
 
+export type RecommendableType = "agent" | "mcp" | "skill" | "hook" | "prompt" | "sandbox";
+
 export interface SetRecommendedRequest {
-	entity_type: string;
+	entity_type: RecommendableType;
 	entity_id: string;
 	recommended: boolean;
 }
 
 export interface SetRecommendedResponse {
-	entity_type: string;
+	entity_type: RecommendableType;
 	entity_id: string;
 	is_recommended: boolean;
 }
@@ -513,6 +515,8 @@ export interface DiscoverySearchResult {
 	"obs:activatable"?: boolean;
 	/** Can take a delegated task right now (approved agent with a headless harness, or remote A2A agent). */
 	"obs:delegable"?: boolean;
+	/** An admin marked this as recommended. Editorial only; never part of `score`. */
+	"obs:recommended"?: boolean;
 	"obs:artifactDigest"?: string | null;
 	"obs:publisher"?: string;
 	/** Organization named on a remote A2A agent's card, as the card states it. */

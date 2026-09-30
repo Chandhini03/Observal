@@ -12,6 +12,7 @@ from models.mcp import ListingStatus
 from schemas.constants import (
     VALID_SANDBOX_NETWORK_POLICIES,
     VALID_SANDBOX_RUNTIME_TYPES,
+    RecommendedFlag,
     Visibility,
     make_harness_list_validator,
     make_option_validator,
@@ -152,12 +153,7 @@ class SandboxListingResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     user_permission: str | None = None
-    is_recommended: bool = False
-
-    @field_validator("is_recommended", mode="before")
-    @classmethod
-    def _coerce_recommended(cls, v: object) -> bool:
-        return bool(v) if v is not None else False
+    is_recommended: RecommendedFlag = False
 
     @field_validator("runtime_config", "resource_limits", mode="before")
     @classmethod
@@ -199,11 +195,6 @@ class SandboxListingSummary(BaseModel):
     status: ListingStatus
     rejection_reason: str | None = None
     updated_at: datetime | None = None
-    is_recommended: bool = False
-
-    @field_validator("is_recommended", mode="before")
-    @classmethod
-    def _coerce_recommended(cls, v: object) -> bool:
-        return bool(v) if v is not None else False
+    is_recommended: RecommendedFlag = False
 
     model_config = {"from_attributes": True}
