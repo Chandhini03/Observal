@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Chandhini Veerabuthiran <Chandhini03@users.noreply.github.com>
+# SPDX-FileCopyrightText: 2026 Shaan Narendran <shaannaren06@gmail.com>
 # SPDX-License-Identifier: Apache-2.0
 
 """Tests for the admin recommended toggle endpoint (PATCH /api/v1/admin/recommended)."""
@@ -184,3 +185,55 @@ async def test_set_recommended_all_component_types():
 
         assert resp.status_code == 200, f"Failed for entity_type={entity_type}"
         assert resp.json()["entity_type"] == entity_type
+
+
+@pytest.mark.asyncio
+async def test_set_recommended_keeps_updated_at_and_reaches_discovery():
+    """Curation is not an edit: the listing's updated_at stays put, and discovery sees the flag."""
+    from datetime import UTC, datetime
+
+    from sqlalchemy import select
+
+    from models.discovery_entry import DiscoveryEntry
+    from models.skill import SkillListing
+    from services.discovery.projection import reproject_all
+    from tests import discovery_support as fx
+
+    engine = fx.make_engine()
+    try:
+        sessions = await fx.create_schema(engine)
+        stamp = datetime(2026, 1, 2, 3, 4, 5, tzinfo=UTC)
+        async with sessions() as db:
+            admin = await fx.user(db, role=UserRole.admin)
+            skill = await fx.skill(db, admin)
+            skill.updated_at = stamp
+            await db.commit()
+            skill_id = skill.id
+
+        async def db_override():
+            async with sessions() as db:
+                yield db
+
+        app = FastAPI()
+        app.include_router(router)
+        app.dependency_overrides[get_current_user] = lambda: admin
+        app.dependency_overrides[get_db] = db_override
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+            resp = await client.patch(
+                "/api/v1/admin/recommended",
+                json={"entity_type": "skill", "entity_id": str(skill_id), "recommended": True},
+            )
+        assert resp.status_code == 200, resp.text
+        assert resp.json()["is_recommended"] is True
+
+        async with sessions() as db:
+            row = (await db.execute(select(SkillListing).where(SkillListing.id == skill_id))).scalar_one()
+            assert row.is_recommended is True
+            assert row.updated_at.replace(tzinfo=UTC) == stamp
+            await reproject_all(db, ctx=fx.CTX)
+            entry = (
+                await db.execute(select(DiscoveryEntry).where(DiscoveryEntry.local_entity_id == skill_id))
+            ).scalar_one()
+            assert entry.raw_entry["obs:recommended"] is True
+    finally:
+        await engine.dispose()

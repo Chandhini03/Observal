@@ -956,7 +956,7 @@ export default function AgentDetailPage({ agentId }: { agentId?: string } = {}) 
                 <div className="lg:hidden">
                   <RecommendedToggle
                     entityType="agent"
-                    entityId={id}
+                    entityId={String(a.id)}
                     isRecommended={!!a.is_recommended}
                   />
                 </div>
@@ -1261,7 +1261,7 @@ export default function AgentDetailPage({ agentId }: { agentId?: string } = {}) 
               {isAdmin && (
                 <RecommendedToggle
                   entityType="agent"
-                  entityId={id}
+                  entityId={String(a.id)}
                   isRecommended={!!a.is_recommended}
                 />
               )}

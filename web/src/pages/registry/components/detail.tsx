@@ -378,7 +378,7 @@ export default function ComponentDetailPage({
               <div className="lg:hidden">
                 <RecommendedToggle
                   entityType={singularType as RecommendableType}
-                  entityId={id}
+                  entityId={String(item.id)}
                   isRecommended={!!item.is_recommended}
                 />
               </div>
@@ -617,7 +617,7 @@ export default function ComponentDetailPage({
               {isAdmin && (
                 <RecommendedToggle
                   entityType={singularType as RecommendableType}
-                  entityId={id}
+                  entityId={String(item.id)}
                   isRecommended={!!item.is_recommended}
                 />
               )}
