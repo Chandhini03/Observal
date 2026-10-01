@@ -1540,6 +1540,14 @@ def admin_set_role(
 
 
 _RECOMMENDABLE = ("agent", "mcp", "skill", "hook", "prompt", "sandbox")
+_RECOMMENDABLE_ROUTES = {
+    "agent": "agents",
+    "mcp": "mcps",
+    "skill": "skills",
+    "hook": "hooks",
+    "prompt": "prompts",
+    "sandbox": "sandboxes",
+}
 
 
 @admin_app.command(name="recommend")
@@ -1565,6 +1573,13 @@ def admin_recommend(
     item_type = _command_choice(item_type, _RECOMMENDABLE, "item type", operation)
     with _command_progress(output, "Updating recommendation..."):
         entity_id = client.resolve_registry_reference(item_type, reference)
+        try:
+            entity_id = str(UUID(entity_id))
+        except ValueError:
+            # A bare name: let the item's own route resolve it, as `show` does,
+            # so ambiguity and missing items get that route's error.
+            route = _RECOMMENDABLE_ROUTES[item_type]
+            entity_id = str(client.get(f"/api/v1/{route}/{quote(entity_id, safe='')}")["id"])
         result = client.patch(
             "/api/v1/admin/recommended",
             {"entity_type": item_type, "entity_id": entity_id, "recommended": not unset},
